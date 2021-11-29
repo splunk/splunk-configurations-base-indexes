@@ -1,10 +1,10 @@
 {
     "schemaVersion": "2.0.0",
     "info": {
-        "title": "Splunk Add-on for McAfee EPO Syslog",
+        "title": "Splunk Base index configurations",
         "id": {
             "group": null,
-            "name": "Splunk_TA_mcafee_epo_syslog",
+            "name": "splunk_configurations_base_indexes",
             "version": "1.0.0"
         },
         "author": [
@@ -15,7 +15,7 @@
             }
         ],
         "releaseDate": null,
-        "description": "Splunk Add-on for McAfee EPO Syslog",
+        "description": "Splunk Base index configurations",
         "classification": {
             "intendedAudience": "IT Professionals",
             "categories": [
@@ -37,7 +37,7 @@
         "releaseNotes": {
             "name": "README",
             "text": "README.txt",
-            "uri": "https://docs.splunk.com/Documentation/AddOns/McAfeeEPOSyslog/About"
+            "uri": "https://github.com/splunk/splunk-configurations-base-indexes"
         }
     },
     "dependencies": null,
