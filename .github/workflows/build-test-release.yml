@@ -59,16 +59,16 @@ jobs:
         id: matrix
         uses: splunk/addonfactory-test-matrix-action@v1.3
 
-  compliance-sample-scanner:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: sample-scanner
-        uses: splunk/addonfactory-sample-scanner@v1
-        id: sample-scanner
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # compliance-sample-scanner:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: sample-scanner
+  #       uses: splunk/addonfactory-sample-scanner@v1
+  #       id: sample-scanner
+  #       env:
+  #         REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   compliance-dependencies:
     name: compliance-dependencies
     runs-on: ubuntu-latest
@@ -166,7 +166,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       - uses: actions/upload-artifact@v2
-        if: always() 
+        if: always()
         with:
           name: snyk-results
           path: snyk-scan_requirements.sarif
@@ -398,13 +398,13 @@ jobs:
     strategy:
       matrix:
         tags:
-          - "cloud"
+          #- "cloud"
           - "appapproval"
           - "deprecated_feature"
           - "developer_guidance"
           - "future"
           - "self-service"
-          - "splunk_appinspect"
+          #- "splunk_appinspect"
           - "manual"
     steps:
       - name: Checkout for manual tag
@@ -561,7 +561,7 @@ jobs:
           echo "::set-output name=addon-upload-path::$ADDON_UPLOAD_PATH"
           echo "::set-output name=directory-path::/tmp"
           echo "::set-output name=s3-bucket::ta-production-artifacts"
-  
+
   run-knowledge-tests:
     if: ${{ needs.test-inventory.outputs.knowledge == 'true' }}
     needs:
@@ -611,7 +611,7 @@ jobs:
           JOB_NAME=${JOB_NAME//[_.]/-}
           JOB_NAME=$(echo "$JOB_NAME" | tr '[:upper:]' '[:lower:]')
           echo "::set-output name=job-name::$JOB_NAME"
-          
+
       - name: run-tests
         id: run-tests
         env:
@@ -742,7 +742,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        splunk: ['8.2.1']
+        splunk: ["8.2.1"]
         sc4s: ${{ fromJson(needs.meta.outputs.matrix_supportedSC4S) }}
     container:
       image: ghcr.io/splunk/workflow-engine-base:2.0.3
@@ -779,7 +779,7 @@ jobs:
           JOB_NAME=${JOB_NAME//[_.]/-}
           JOB_NAME=$(echo "$JOB_NAME" | tr '[:upper:]' '[:lower:]')
           echo "::set-output name=job-name::$JOB_NAME"
-          
+
       - name: run-tests
         id: run-tests
         env:
@@ -1198,7 +1198,6 @@ jobs:
     if: always()
     needs:
       - meta
-      - compliance-sample-scanner
       - compliance-dependencies
       - compliance-copyrights
       - lint
@@ -1260,14 +1259,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
       - name: Download package-deployment
-        if: ${{ steps.semantic.outputs.new_release_published == 'true' }} 
+        if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
         uses: actions/download-artifact@v2
         id: download-package-deployment
         with:
           name: package-deployment
           path: download/artifacts/
       - name: Download package-splunkbase
-        if: ${{ steps.semantic.outputs.new_release_published == 'true' }} 
+        if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
         uses: actions/download-artifact@v2
         id: download-package-splunkbase
         with:
@@ -1290,11 +1289,11 @@ jobs:
           name: cim-field-report
           path: download/artifacts/deployment
       - name: List of assets
-        if: ${{ steps.semantic.outputs.new_release_published == 'true' }} 
+        if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
         run: |
           ls -la ${{ steps.download-package-splunkbase.outputs.download-path }}
       - name: Upload assets to release
-        if: ${{ steps.semantic.outputs.new_release_published == 'true' }} 
+        if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GH_TOKEN_ADMIN }}

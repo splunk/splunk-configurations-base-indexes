@@ -1,0 +1,28 @@
+  check_for_known_vulnerabilities_in_third_party_libraries:
+    comment: 'N/A No code'
+  check_for_reverse_shells:
+    comment: 'N/A No code'
+  check_external_data_sources:
+    comment: 'N/A No code'
+  check_splunk_logo:
+    comment: 'N/A No code'
+  check_authorization_credentials:
+    comment: 'N/A No code'
+  check_embedded_links:
+    comment: 'N/A No code'
+  check_fs_writes:
+    comment: 'N/A No code'
+  check_for_urls_in_files:
+    comment: 'N/A No code'
+  check_dependencies:
+    comment: 'N/A No code'
+  check_documented_included_open_source:
+    comment: 'N/A No code'
+  check_editing_and_proofreading:
+    comment: 'N/A No code'
+  check_requires_access_to_files_outside_apps_dir:
+    comment: 'N/A No code'
+  check_install_on_claimed_targets:
+    comment: 'N/A No code'
+  check_link_includes_contact_info:
+    comment: 'N/A No code'
