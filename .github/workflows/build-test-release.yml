@@ -404,7 +404,7 @@ jobs:
           - "developer_guidance"
           - "future"
           - "self-service"
-          - "splunk_appinspect"
+          #- "splunk_appinspect"
           - "manual"
     steps:
       - name: Checkout for manual tag
