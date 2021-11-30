@@ -324,6 +324,7 @@ jobs:
       - id: testset
         name: testsets
         run: |
+          ls -al tests
           find tests -type d -maxdepth 1 -mindepth 1 | sed 's|^tests/||g' |  while read -r TESTSET; do echo "::set-output name=$TESTSET::true"; echo "$TESTSET::true"; done
   run-unit-tests:
     name: test-unit-python3-${{ matrix.python-version }}
