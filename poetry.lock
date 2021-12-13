@@ -129,7 +129,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "dunamai"
-version = "1.5.5"
+version = "1.6.0"
 description = "Dynamic version generation"
 category = "dev"
 optional = false
@@ -692,7 +692,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "splunk-add-on-ucc-framework"
-version = "5.8.2"
+version = "5.9.0"
 description = "Splunk Add-on SDK formerly UCC is a build and code generation framework"
 category = "dev"
 optional = false
@@ -700,10 +700,9 @@ python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
 defusedxml = ">=0.7.1,<0.8.0"
-dunamai = "1.5.5"
+dunamai = "1.6.0"
 jinja2 = ">=2,<4"
-jsonschema = ">=3.2.0,<4.0.0"
-lxml = ">=4.3,<5.0"
+jsonschema = ">=3.2,<5.0"
 
 [[package]]
 name = "splunk-appinspect"
@@ -816,7 +815,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "0c7b5d2fcd842ba28a27827306f913d7179fd8503a28e4f9743fc6ba3a336adb"
+content-hash = "02c2bde0f4c7859fa39db6e0068d2829feec5a8c3198a931ee4baa7f8bf01871"
 
 [metadata.files]
 atomicwrites = [
@@ -917,8 +916,8 @@ defusedxml = [
     {file = "defusedxml-0.7.1.tar.gz", hash = "sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69"},
 ]
 dunamai = [
-    {file = "dunamai-1.5.5-py3-none-any.whl", hash = "sha256:525ac30db6ca4f8e48b9f198c2e8fbc2a9ce3ea189768361c621ea635212ee49"},
-    {file = "dunamai-1.5.5.tar.gz", hash = "sha256:32f30db71e8fd1adeb42fac45c04433680e47a28298447cd30304e0bba95a7dd"},
+    {file = "dunamai-1.6.0-py3-none-any.whl", hash = "sha256:44a94a4edebb145bb6198a2f26de957b12b77d43b7c9c0646be814c60cf5d8df"},
+    {file = "dunamai-1.6.0.tar.gz", hash = "sha256:6f1111f47e869ed58d44a7d37f112e3e7c761dce3c71f2c5464526928d7e9896"},
 ]
 enum34 = [
     {file = "enum34-1.1.10-py2-none-any.whl", hash = "sha256:a98a201d6de3f2ab3db284e70a33b0f896fbf35f8086594e8c9e74b909058d53"},
@@ -1343,8 +1342,8 @@ soupsieve = [
     {file = "soupsieve-2.3.1.tar.gz", hash = "sha256:b8d49b1cd4f037c7082a9683dfa1801aa2597fb11c3a1155b7a5b94829b4f1f9"},
 ]
 splunk-add-on-ucc-framework = [
-    {file = "splunk_add_on_ucc_framework-5.8.2-py3-none-any.whl", hash = "sha256:831a6295fd2d7a64d7de211f8445078d1fcf08a748f3c2196fff989acf51191c"},
-    {file = "splunk_add_on_ucc_framework-5.8.2.tar.gz", hash = "sha256:90caf6a9bfabe983672218130b6615b0a7ad73fbe9b5daf45be6e4c848d52fe1"},
+    {file = "splunk_add_on_ucc_framework-5.9.0-py3-none-any.whl", hash = "sha256:e1dfaed17a3cec03173475b5d9376a84240c700cc6ad60f963561ad2ca970914"},
+    {file = "splunk_add_on_ucc_framework-5.9.0.tar.gz", hash = "sha256:a34ab03604367fe41824c330e2fe3abac410a8718bc306d9dc30f7dd66357e51"},
 ]
 splunk-appinspect = [
     {file = "splunk-appinspect-2.12.0.tar.gz", hash = "sha256:9f5f88cbe62fccc946a932484d45f1ed22f8a18420624568177f039121f5d2d9"},
