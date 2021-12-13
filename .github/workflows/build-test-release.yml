@@ -29,9 +29,12 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v2.6.0
+        uses: cycjimmy/semantic-release-action@v2.7.0
         with:
           semantic_version: 17
           extra_plugins: |
@@ -44,7 +47,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
         id: docker_action_meta
-        uses: docker/metadata-action@v3.6.1
+        uses: docker/metadata-action@v3.6.2
         with:
           images: ghcr.io/${{ github.repository }}/container
           tags: |
@@ -59,16 +62,16 @@ jobs:
         id: matrix
         uses: splunk/addonfactory-test-matrix-action@v1.3
 
-  # compliance-sample-scanner:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #     - name: sample-scanner
-  #       uses: splunk/addonfactory-sample-scanner@v1
-  #       id: sample-scanner
-  #       env:
-  #         REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  compliance-sample-scanner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: sample-scanner
+        uses: splunk/addonfactory-sample-scanner@v1
+        id: sample-scanner
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   compliance-dependencies:
     name: compliance-dependencies
     runs-on: ubuntu-latest
@@ -166,7 +169,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       - uses: actions/upload-artifact@v2
-        if: always()
+        if: always() 
         with:
           name: snyk-results
           path: snyk-scan_requirements.sarif
@@ -222,7 +225,7 @@ jobs:
       - name: Semantic Release Get Next
         id: semantic
         if: github.event_name != 'pull_request'
-        uses: cycjimmy/semantic-release-action@v2.6.0
+        uses: cycjimmy/semantic-release-action@v2.7.0
         with:
           semantic_version: 17
           extra_plugins: |
@@ -255,17 +258,6 @@ jobs:
         uses: splunk/addonfactory-packaging-toolkit-action@v1
         with:
           source: ${{ steps.uccgen.outputs.OUTPUT }}
-      - name: Rename slim output
-        id: slim-renamed
-        run: |
-          set -o xtrace
-          pushd build/package/splunkbase/
-          echo ${{ steps.slim.outputs.OUTPUT }}
-          find . -name "*.spl" -exec bash -c 'sudo mv "$1" "${1%.spl}".tar.gz' - '{}' +
-          ls -al
-          PACKAGE=$(sudo ls)
-          echo "::set-output name=OUTPUT::build/package/splunkbase/${PACKAGE}"
-          popd
       - name: artifact-splunk-unpacked
         uses: actions/upload-artifact@v2
         with:
@@ -276,7 +268,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: package-splunkbase
-          path: ${{ steps.slim-renamed.outputs.OUTPUT }}
+          path: ${{ steps.slim.outputs.OUTPUT }}
         if: always()
       - name: upload-build-to-s3
         id: buildupload
@@ -285,9 +277,9 @@ jobs:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          echo "::set-output name=name::$(basename "${{ steps.slim-renamed.outputs.OUTPUT }}")"
-          basename "${{ steps.slim-renamed.outputs.OUTPUT }}"
-          aws s3 cp "${{ steps.slim-renamed.outputs.OUTPUT }}" s3://ta-production-artifacts/ta-apps/
+          echo "::set-output name=name::$(basename "${{ steps.slim.outputs.OUTPUT }}")"
+          basename "${{ steps.slim.outputs.OUTPUT }}"
+          aws s3 cp "${{ steps.slim.outputs.OUTPUT }}" s3://ta-production-artifacts/ta-apps/
       - name: artifact-splunk-parts
         uses: actions/upload-artifact@v2
         with:
@@ -339,8 +331,7 @@ jobs:
           - "3.7"
     steps:
       - uses: actions/checkout@v2
-      - if: failure()
-        name: Setup python
+      - name: Setup python
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
@@ -394,17 +385,17 @@ jobs:
     name: quality-appinspect-${{ matrix.tags }}
     needs: build
     runs-on: ubuntu-latest
-    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         tags:
-          #- "cloud"
+          - "cloud"
           - "appapproval"
           - "deprecated_feature"
           - "developer_guidance"
           - "future"
           - "self-service"
-          #- "splunk_appinspect"
+          - "splunk_appinspect"
           - "manual"
     steps:
       - name: Checkout for manual tag
@@ -466,7 +457,7 @@ jobs:
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v3.6.1
+        uses: docker/metadata-action@v3.6.2
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
@@ -488,14 +479,14 @@ jobs:
           pushd build/package/splunkbase/
           PACKAGE=$(ls ./*)
           echo "$PACKAGE"
-          mv "$PACKAGE" "${{ steps.getappid.outputs.result }}".tar.gz
+          mv "$PACKAGE" "${{ steps.getappid.outputs.result }}".spl
           while IFS= read -r line
           do
             echo ">>$line<<"
             oras push \
                 --manifest-config /dev/null:application/vnd.splunk.ent.package.v1.tar+gzip \
                 "$line" \
-                "${{ steps.getappid.outputs.result }}".tar.gz
+                "${{ steps.getappid.outputs.result }}".spl
             echo "  complete"
           done < /tmp/tags
           popd
@@ -561,7 +552,7 @@ jobs:
           echo "::set-output name=addon-upload-path::$ADDON_UPLOAD_PATH"
           echo "::set-output name=directory-path::/tmp"
           echo "::set-output name=s3-bucket::ta-production-artifacts"
-
+  
   run-knowledge-tests:
     if: ${{ needs.test-inventory.outputs.knowledge == 'true' }}
     needs:
@@ -611,7 +602,7 @@ jobs:
           JOB_NAME=${JOB_NAME//[_.]/-}
           JOB_NAME=$(echo "$JOB_NAME" | tr '[:upper:]' '[:lower:]')
           echo "::set-output name=job-name::$JOB_NAME"
-
+          
       - name: run-tests
         id: run-tests
         env:
@@ -742,7 +733,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        splunk: ["8.2.1"]
+        splunk: ['8.2.1']
         sc4s: ${{ fromJson(needs.meta.outputs.matrix_supportedSC4S) }}
     container:
       image: ghcr.io/splunk/workflow-engine-base:2.0.3
@@ -779,7 +770,7 @@ jobs:
           JOB_NAME=${JOB_NAME//[_.]/-}
           JOB_NAME=$(echo "$JOB_NAME" | tr '[:upper:]' '[:lower:]')
           echo "::set-output name=job-name::$JOB_NAME"
-
+          
       - name: run-tests
         id: run-tests
         env:
@@ -1198,6 +1189,7 @@ jobs:
     if: always()
     needs:
       - meta
+      - compliance-sample-scanner
       - compliance-dependencies
       - compliance-copyrights
       - lint
@@ -1213,6 +1205,7 @@ jobs:
       - run-knowledge-tests
       - run-modinput-tests
       - run-ui-tests
+      - run-requirement-tests
     runs-on: ubuntu-latest
     env:
       NEEDS: ${{ toJson(needs) }}
@@ -1245,9 +1238,12 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
       - name: Semantic Release
         id: semantic
-        uses: cycjimmy/semantic-release-action@v2.6.0
+        uses: cycjimmy/semantic-release-action@v2.7.0
         with:
           semantic_version: 17
           extra_plugins: |
@@ -1259,14 +1255,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
       - name: Download package-deployment
-        if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
+        if: ${{ steps.semantic.outputs.new_release_published == 'true' }} 
         uses: actions/download-artifact@v2
         id: download-package-deployment
         with:
           name: package-deployment
           path: download/artifacts/
       - name: Download package-splunkbase
-        if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
+        if: ${{ steps.semantic.outputs.new_release_published == 'true' }} 
         uses: actions/download-artifact@v2
         id: download-package-splunkbase
         with:
@@ -1289,11 +1285,11 @@ jobs:
           name: cim-field-report
           path: download/artifacts/deployment
       - name: List of assets
-        if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
+        if: ${{ steps.semantic.outputs.new_release_published == 'true' }} 
         run: |
           ls -la ${{ steps.download-package-splunkbase.outputs.download-path }}
       - name: Upload assets to release
-        if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
+        if: ${{ steps.semantic.outputs.new_release_published == 'true' }} 
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GH_TOKEN_ADMIN }}
