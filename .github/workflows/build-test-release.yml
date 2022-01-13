@@ -137,6 +137,17 @@ jobs:
         with:
           scanArguments: "--max_dept 50 -x .github/workflows/exclude-patterns.txt"
 
+  semgrep:
+    runs-on: ubuntu-latest
+    name: security-sast-semgrep
+    steps:
+      - uses: actions/checkout@v2
+
+  snyk:
+    name: security-vuln-snyk
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
   build:
     name: build
     runs-on: ubuntu-latest
@@ -1169,6 +1180,8 @@ jobs:
       - compliance-copyrights
       - lint
       - review_secrets
+      - semgrep
+      - snyk
       - build
       - security-virustotal
       - test-inventory
