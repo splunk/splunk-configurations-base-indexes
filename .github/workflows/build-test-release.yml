@@ -1169,8 +1169,7 @@ jobs:
       - compliance-copyrights
       - lint
       - review_secrets
-
-- build
+      - build
       - security-virustotal
       - test-inventory
       - run-unit-tests
