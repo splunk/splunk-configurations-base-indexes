@@ -1,1 +1,2 @@
 # splunk-configurations-base-indexes
+#
