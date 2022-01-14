@@ -1223,14 +1223,7 @@ jobs:
       - review_secrets
       - build
       - security-virustotal
-      - test-inventory
-      - run-unit-tests
-      - run-requirements-unit-tests
       - setup
-      - run-knowledge-tests
-      - run-modinput-tests
-      - run-ui-tests
-      - run-requirement-tests
     runs-on: ubuntu-latest
     env:
       NEEDS: ${{ toJson(needs) }}
