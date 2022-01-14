@@ -45,7 +45,7 @@ jobs:
             @google/semantic-release-replace-plugin
           dry_run: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
       - name: Docker meta
         id: docker_action_meta
         uses: docker/metadata-action@v3.6.2
